@@ -33,7 +33,7 @@ func findTemplateFilename(controllerName string, actionName string) (templateFil
 	return templateFilename
 }
 
-func renderAdmin(c *gin.Context, context map[string]interface{}, templateName ...string) error {
+func RenderAdmin(c *gin.Context, context map[string]interface{}, templateName ...string) error {
 
 	// context に controllerName, actionName を追加する
 	controllerName, actionName := extractControllerActionName(c)

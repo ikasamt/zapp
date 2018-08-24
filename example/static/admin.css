@@ -1,0 +1,303 @@
+
+/**
+* Body CSS
+*/
+
+html,
+body {
+    height: 100%;
+    background-color: #eee;
+    font-family: 'Noto Sans Japanese', sans-serif;
+    font-size: 100%;
+}
+
+html,
+body,
+input,
+textarea,
+buttons {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.004);
+}
+
+
+/**
+* Layout CSS
+*/
+
+#header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 2;
+    transition: left 0.2s;
+}
+
+#sidedrawer {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    left: -200px;
+    overflow: auto;
+    z-index: 2;
+    background-color: #fff;
+    transition: transform 0.2s;
+}
+
+#content-wrapper {
+    min-height: 100%;
+    overflow-x: hidden;
+    margin-left: 0px;
+    transition: margin-left 0.2s;
+
+    /* sticky bottom */
+    margin-bottom: -160px;
+    padding-bottom: 160px;
+}
+
+#footer {
+    height: 160px;
+    margin-left: 0px;
+    transition: margin-left 0.2s;
+}
+
+@media (min-width: 768px) {
+    #header {
+    left: 200px;
+    }
+
+    #sidedrawer {
+    transform: translate(200px);
+    }
+
+    #content-wrapper {
+    margin-left: 200px;
+    }
+
+    #footer {
+    margin-left: 200px;
+    }
+
+    body.hide-sidedrawer #header {
+    left: 0;
+    }
+
+    body.hide-sidedrawer #sidedrawer {
+    transform: translate(0px);
+    }
+
+    body.hide-sidedrawer #content-wrapper {
+    margin-left: 0;
+    }
+
+    body.hide-sidedrawer #footer {
+    margin-left: 0;
+    }
+}
+
+
+/**
+* Toggle Sidedrawer
+*/
+#sidedrawer.active {
+    transform: translate(200px);
+}
+
+
+/**
+* Header CSS
+*/
+
+.sidedrawer-toggle {
+    background-color: black;
+    color: white;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 20px;
+    margin-right: 10px;
+}
+
+.sidedrawer-toggle:hover {
+    background-color: black;
+    color: white;
+    text-decoration: none;
+}
+
+
+/**
+* Sidedrawer CSS
+*/
+
+#sidedrawer-brand {
+    padding-left: 20px;
+}
+
+#sidedrawer ul {
+    list-style: none;
+}
+
+#sidedrawer > ul {
+    padding-left: 0px;
+}
+
+#sidedrawer > ul > li:first-child {
+    padding-top: 15px;
+}
+
+#sidedrawer strong {
+    display: block;
+    padding: 15px 22px;
+    cursor: pointer;
+}
+
+#sidedrawer strong:hover {
+    background-color: #E0E0E0;
+}
+
+#sidedrawer strong + ul > li {
+    padding: 6px 0px;
+}
+
+
+/**
+* Footer CSS
+*/
+
+#footer {
+    background-color: black;
+    color: white;
+}
+
+#footer a {
+    background-color: black;
+    color: white;
+    text-decoration: underline;
+}
+
+
+/* 独自の定義*/
+.mui-appbar , #footer{
+    background-color: black;
+    color: white;
+}
+#content-wrapper {
+    margin-bottom: -40px;
+}
+#footer{
+    color: white;
+    text-align: center;
+    height: 40px;
+}
+
+.box{
+    float:right;
+    padding: 4px;
+    background-color: black;
+    color: white;
+}
+
+th{
+    padding: 10px 0px 10px 0px;
+    text-align: left;
+}
+
+table.scoreboard th{
+    background-color:#F9FBE7;
+    black: white;
+    text-align:center;
+}
+
+table.scoreboard td{
+    background-color:#F9FBE7;
+    color:black;
+    font-size:30px;
+    width:100px;
+    margin:5px;
+    padding:10px;
+    text-align:center
+}
+
+li a{
+    color: black;
+}
+
+#sidedrawer-brand a{
+    color: black;
+}
+
+.mui-panel{
+    margin: 10px;
+}
+
+
+@media screen and (max-width:600px) { /*600px以下(スマホ用)*/
+table, tbody, tr, th, td {
+    display: block;
+    max-width: 100%; /*スマホ画面ほぼ一杯に広がる感じ*/
+}
+
+thead th {
+}
+tbody th {
+    color: white;
+    background-color:black;
+}
+tbody tr {
+    border-bottom: 2px solid gray;
+}
+}
+
+td input[type=text] {
+width: 90%;
+margin: 5px 0px 5px 0px;
+padding: 3px 0px 3px 0px;
+line-height: 30px;
+}
+
+.field_with_errors{
+background-color:#fcc;
+padding:3px;
+}
+
+.field_with_errors_message{
+padding-left: 3px;
+color: red;
+}
+
+#listmenu{
+font-size:12px;
+}
+
+ul.pageNav01s {
+margin: 0 0 10px;
+padding: 12px;
+//- background: #f3f3f3;
+text-align: center;
+}
+
+ul.pageNav01s li {
+display: inline;
+margin: 0 1px;
+padding: 0;
+}
+
+ul.pageNav01s li span,
+ul.pageNav01s li a {
+display: inline-block;
+padding: 1px 8px;
+background: #fff;
+border: 1px solid #ccc;
+vertical-align: middle;
+text-decoration: none;
+}
+
+ul.pageNav01s li span{
+background: lightgray;
+}
+
+ul.pageNav01s li a:hover {
+background: #efefef;
+}

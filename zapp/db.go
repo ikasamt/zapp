@@ -7,7 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-// DBインスタンスを返す
+// GetDBInstance returns DBインスタンスを返す
 func GetDBInstance(dsn string) (db *gorm.DB) {
 	db, err := gorm.Open("mysql", dsn)
 	if err != nil {
