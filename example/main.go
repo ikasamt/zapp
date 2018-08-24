@@ -17,10 +17,10 @@ func dbFindHandler(c *gin.Context) {
 	var user User
 	db.Debug().First(&user)
 
-	var comment Comment
-	db.Debug().First(&comment)
+	var organization Organization
+	db.Debug().First(&organization)
 
-	context := map[string]interface{}{`user`: user, `comment`: comment}
+	context := map[string]interface{}{`user`: user, `organization`: organization}
 	zapp.RenderJade(c, `layout`, `index`, context)
 }
 
