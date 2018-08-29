@@ -18,6 +18,7 @@ func generateModel(c *cli.Context) error {
 	ret := []string{}
 	for _, tableName := range showTables(dsn) {
 		table := descTable(dsn, tableName)
+		// struct
 		ret = append(ret, ``)
 		ret = append(ret, `// `+table.Name)
 		lines := []string{}
@@ -28,6 +29,14 @@ func generateModel(c *cli.Context) error {
 		lines = append(lines, `	beforeJSON     gin.H`)
 		lines = append(lines, `	errors         error`)
 		lines = append(lines, `}`)
+		lines = append(lines, ``)
+		lines = append(lines, ``)
+		// String method
+		lines = append(lines, `func (x *`+table.StructName()+`) String() string { return fmt.Sprintf("[%d]", x.ID) }`)
+
+		// Search method
+		// lines = append(lines, `func (x *`+table.StructName()+`) Search(q *gorm.DB) *gorm.DB { return q }`)
+
 		tmpStr := strings.Join(lines, CRLN)
 		tmpByte, err := format.Source([]byte(tmpStr))
 		if err != nil {

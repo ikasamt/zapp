@@ -25,5 +25,5 @@ func main() {
 			Action:  migration,
 		},
 	}
-	app.Run(os.Args) // 忘れない！（よくやらかす）
+	app.Run(os.Args)
 }

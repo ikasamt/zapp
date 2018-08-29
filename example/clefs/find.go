@@ -1,24 +1,37 @@
 package clefs
 
 import (
-	"errors"
-
-	"github.com/jinzhu/gorm"
+	"github.com/gin-gonic/gin"
+	"github.com/ikasamt/zapp/zapp"
 )
 
-//go:generate genny -pkg=main -in=$GOFILE -out=../zzz-autogen-$GOFILE gen "Anything=User"
+//go:generate genny -pkg=main -in=$GOFILE -out=../zzz-autogen-$GOFILE gen "Anything=User,Organization"
 
-// find One
-func findAnything(db *gorm.DB, anyID int64) (any Anything, e error) {
-	db.Debug().Where("id = ?", anyID).First(&any)
-	if any.ID == 0 {
-		return Anything{}, errors.New("Error: USER NOT FOUND")
-	}
-	return any, nil
-}
-
-// find All
-func findAllAnythings(db *gorm.DB, selects string) (instances []Anything) {
+// select All
+func selectAllAnythings(selects string) (instances []*Anything) {
+	db := GetMasterDBInstance()
+	defer db.Close()
 	db.Debug().Select(selects).Find(&instances)
 	return
+}
+
+// fetch One
+func fetchAnything(anyID int) (any Anything) {
+	db := GetMasterDBInstance()
+	defer db.Close()
+	db.Debug().Where("id = ?", anyID).First(&any)
+	any.beforeJSON = zapp.CallMethod(any, `AsJSON`, gin.H{}).(gin.H)
+	return any
+}
+
+// get One
+func getAnything(c *gin.Context) (instance Anything, e error) {
+	// 対象IDを取得
+	ID, err := zapp.GetID(c)
+	if err != nil {
+		return instance, err
+	}
+	// DBから取得
+	instance = fetchAnything(ID)
+	return instance, nil
 }

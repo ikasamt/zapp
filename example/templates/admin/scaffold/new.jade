@@ -1,0 +1,24 @@
+extends layout.jade
+
+block content
+
+  .mui-panel
+        
+    form.mui-form(method="POST", action='/admin/{{ $.controllerName }}/create')
+        table(style='width:100%')
+            tr
+                th
+                    span {{ $.controllerName }}ID：
+                td
+                    span 自動的に採番されます
+            tr
+                th
+                    span Name:
+                td
+                    {{ $.instance.TextField "Name" }}
+
+            {{ include "_form"}}
+            tr
+                th
+                td
+                    input(type='submit', class="mui-btn mui-btn--danger", value='追加する')

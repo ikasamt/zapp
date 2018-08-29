@@ -1,8 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
@@ -11,27 +13,23 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-var masterDsn = "root:@tcp(127.0.0.1:3306)/teame_feedback?parseTime=true&loc=Asia%2FTokyo&charset=utf8mb4"
-
 func GetMasterDBInstance() (db *gorm.DB) {
-	return zapp.GetDBInstance(masterDsn)
+	dsn := ZappEnvironment[`mysql`].(string)
+	return zapp.GetDBInstance(dsn)
 }
 
-func dbFindHandler(c *gin.Context) {
-	db := GetMasterDBInstance()
-	defer db.Close()
-
-	var user User
-	db.Debug().First(&user)
-
-	var organization Organization
-	db.Debug().First(&organization)
-
-	context := map[string]interface{}{`user`: user, `organization`: organization}
-	zapp.RenderJade(c, `layout`, `index`, context)
-}
+var ZappEnv *string
+var ZappEnvironment zapp.Environment
 
 func main() {
+
+	// YAML 設定ファイル読み込み
+	ZappEnv := os.Getenv("ZAPP_ENV")
+	if ZappEnv == `` {
+		ZappEnv = "development"
+	}
+	ZappEnvironments := zapp.ReadEnvironments()
+	ZappEnvironment = ZappEnvironments[ZappEnv]
 
 	log.SetFlags(log.Ldate | log.Ltime | log.Lshortfile)
 
@@ -46,7 +44,21 @@ func main() {
 	r.StaticFile("/favicon.ico", "./static/favicon.ico")
 	r.GET("/ping", func(c *gin.Context) { c.String(http.StatusOK, "pong") })
 
-	r.GET("/dbfind", dbFindHandler)
-	r.Run(":3001")
+	r.GET("/sample", sampleHandler)
+
+	// User
+	r.GET("/admin/user/", adminUserListHandler)
+	r.GET("/admin/user/new", adminUserNewHandler)
+	r.GET("/admin/user/edit/:id", adminUserEditHandler)
+	r.GET("/admin/user/show/:id", adminUserShowHandler)
+	r.POST("/admin/user/create", adminUserCreateHandler)
+
+	// Organization
+	r.GET("/admin/organization/", adminOrganizationListHandler)
+	r.GET("/admin/organization/new", adminOrganizationNewHandler)
+	r.GET("/admin/organization/edit/:id", adminOrganizationEditHandler)
+	r.GET("/admin/organization/show/:id", adminOrganizationShowHandler)
+
+	r.Run(fmt.Sprintf(":%d", ZappEnvironment[`port`].(int)))
 
 }

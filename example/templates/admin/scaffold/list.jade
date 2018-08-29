@@ -1,0 +1,22 @@
+extend
+
+block content
+
+  .mui-panel
+    {{ include "admin/_pager"}}
+    table(class="mui-table mui-table--bordered")
+        thead
+            tr
+                th ID
+                th 登録時刻
+                th
+        tbody
+
+            range $instance := $.instances
+                    tr
+                        td {{$instance.ID}}
+                        td {{$instance.CreatedAt | FormatJST }}
+                        td 
+                            a(href='/admin/{{ $.controllerName }}/show/{{$instance.ID}}') 
+                                i(class="fa fa-chevron-right", aria-hidden="true", style='width:100%')
+    {{ include "admin/_pager"}}

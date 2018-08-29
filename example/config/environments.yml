@@ -1,0 +1,9 @@
+development:
+  port: 3001
+  mysql: root:@tcp(127.0.0.1:3306)/teame_feedback?parseTime=true&loc=Asia%2FTokyo&charset=utf8mb4
+  password_salt: saltVeTUsB5asalt
+
+production:
+  port: 3001
+  mysql: root:@tcp(127.0.0.1:3306)/zappandroger?parseTime=true&loc=Asia%2FTokyo&charset=utf8mb4
+  password_salt: saltVeTUsB5asalt

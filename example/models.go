@@ -6,8 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// organizations
-type Organization struct {
+// roger_migrated
+type RogerMigrated struct {
 	ID         int
 	Name       string
 	CreatedAt  time.Time
@@ -16,8 +16,8 @@ type Organization struct {
 	errors     error
 }
 
-// roger_migrated
-type RogerMigrated struct {
+// organizations
+type Organization struct {
 	ID         int
 	Name       string
 	CreatedAt  time.Time
@@ -33,11 +33,10 @@ type User struct {
 	Name              string
 	Email             string
 	HashedPassword    string
+	IsInitialPassword bool
 	PhotoKeyName      string
 	CreatedAt         time.Time
 	UpdatedAt         time.Time
-	IsInitialPassword string
-	Department        string
 	beforeJSON        gin.H
 	errors            error
 }

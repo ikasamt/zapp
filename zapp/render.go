@@ -5,12 +5,14 @@ import (
 	"fmt"
 	"io/ioutil"
 	"log"
+	"path/filepath"
 	"time"
+
+	"html/template"
 
 	"github.com/Joker/jade"
 	humanize "github.com/dustin/go-humanize"
 	"github.com/gin-gonic/gin"
-	"github.com/golang/go/src/html/template"
 )
 
 func baseFuncMap() template.FuncMap {
@@ -36,6 +38,9 @@ func baseFuncMap() template.FuncMap {
 		"FormatJST": func(value time.Time) string {
 			return value.Format("2006/01/02 15:04:05")
 		},
+		"safehtml": func(text string) template.HTML {
+			return template.HTML(text)
+		},
 	}
 }
 
@@ -56,22 +61,24 @@ func ConvertJadeToHTML(templateFilename string) (html string, err error) {
 }
 
 //
-func RenderJade(c *gin.Context, layoutFilename string, templateFilename string, context map[string]interface{}) error {
-	fn := TemplateDir + "/" + layoutFilename + ".jade"
+func RenderJade(c *gin.Context, dirName string, controllerName string, actionName string, context map[string]interface{}) error {
+	fn := filepath.Join(TemplateDir, dirName, "layout.jade")
 	layoutHTML, err := ConvertJadeToHTML(fn)
 	if err != nil {
-		log.Println(err)
 		return err
 	}
 
-	fn = TemplateDir + "/" + templateFilename + ".jade"
-	contentHTML, err := ConvertJadeToHTML(fn)
-	if err != nil {
-		log.Println(err)
-		return err
+	for _, dir := range [2]string{controllerName, `scaffold`} {
+		fn = filepath.Join(TemplateDir, dirName, dir, actionName+".jade")
+		contentHTML, err := ConvertJadeToHTML(fn)
+		if err == nil {
+			return ExecuteTemplate(c, layoutHTML, contentHTML, context)
+		}
+		// log.Println(err)
 	}
 
-	return ExecuteTemplate(c, layoutHTML, contentHTML, context)
+	// 両ファイルともエラーなら
+	return err
 }
 
 func executeTemplateToHTML(templateFilename string, context map[string]interface{}) (template.HTML, error) {
@@ -98,11 +105,13 @@ func ExecuteTemplate(c *gin.Context, layoutHTML string, contentHTML string, cont
 	tmpl, err := template.New("layout").Funcs(funcMap).Parse(layoutHTML)
 	tmpl.New("tmpl").Parse(contentHTML)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 
 	err = tmpl.Execute(c.Writer, context)
 	if err != nil {
+		log.Println(err)
 		return err
 	}
 	return nil
