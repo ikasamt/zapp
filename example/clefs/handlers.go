@@ -114,12 +114,14 @@ func (any *Anything) GetErrors(key string) []string {
 	return _errors[key]
 }
 
+// GetValueAndName
 func (any *Anything) GetValueAndName(key string) (value reflect.Value, name string) {
 	value = reflect.ValueOf(any).Elem().FieldByName(key)
 	name = strcase.ToSnake(strings.Replace(key, "ID", "Id", 1))
 	return
 }
 
+// CheckboxField
 func (any *Anything) CheckboxField(key string) template.HTML {
 	value, name := any.GetValueAndName(key)
 
@@ -129,6 +131,7 @@ func (any *Anything) CheckboxField(key string) template.HTML {
 	return template.HTML(fmt.Sprintf("<input type='checkbox' name='%s' />", name))
 }
 
+// TextField
 func (any *Anything) TextField(key string) template.HTML {
 	value, name := any.GetValueAndName(key)
 
@@ -144,6 +147,7 @@ func (any *Anything) TextField(key string) template.HTML {
 	return template.HTML(inputText)
 }
 
+// SelectField
 func (any *Anything) SelectField(key string, options string) template.HTML {
 	_, name := any.GetValueAndName(key)
 
@@ -210,19 +214,21 @@ func adminAnythingListHandler(c *gin.Context) {
 	instance.Set(c)
 	totalCount, instances := searchAnythings(c, instance)
 	context := map[string]interface{}{"instances": instances, "instance": instance, "total_count": totalCount}
-	zapp.RenderAdmin(c, context)
+	zapp.Render(c, `admin`, context)
 }
 
 // New
 func adminAnythingNewHandler(c *gin.Context) {
 	instance := Anything{}
-	zapp.RenderAdmin(c, map[string]interface{}{"instance": instance})
+	context := map[string]interface{}{"instance": instance}
+	zapp.Render(c, `admin`, context)
 }
 
 // Edit
 func adminAnythingEditHandler(c *gin.Context) {
 	instance, _ := getAnything(c)
-	zapp.RenderAdmin(c, map[string]interface{}{"instance": instance})
+	context := map[string]interface{}{"instance": instance}
+	zapp.Render(c, `admin`, context)
 }
 
 // Show
@@ -231,7 +237,8 @@ func adminAnythingShowHandler(c *gin.Context) {
 	if err != nil || instance.ID == 0 {
 		log.Println(err)
 	}
-	zapp.RenderAdmin(c, map[string]interface{}{"instance": instance})
+	context := map[string]interface{}{"instance": instance}
+	zapp.Render(c, `admin`, context)
 }
 
 // Create
@@ -244,7 +251,8 @@ func adminAnythingCreateHandler(c *gin.Context) {
 	instance.Set(c)
 	instance.Validate()
 	if instance.errors != nil {
-		zapp.RenderAdmin(c, map[string]interface{}{"instance": instance}, `new`)
+		context := map[string]interface{}{"instance": instance}
+		zapp.Render(c, `admin`, context, `new`)
 		return
 	}
 

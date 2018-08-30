@@ -25,9 +25,10 @@ func (x Anything) Somethings() (instances []Something) {
 	return
 }
 
+//
 func (x Something) AnythingOptions() string {
 	tmp := ""
-	tmp += "<option></option>"
+	tmp += "<option>&nbsp;</option>"
 	for _, any := range selectAllAnythings("id, name") {
 		ID_ := reflect.ValueOf(x.AnythingID)
 		var ID int
