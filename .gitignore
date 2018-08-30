@@ -5,6 +5,7 @@
 *.so
 *.dylib
 bin*
+*zzz-autogen-*
 
 # Test binary, build with `go test -c`
 *.test
