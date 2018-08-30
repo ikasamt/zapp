@@ -11,6 +11,9 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+var DefaultPerPage = 15
+var UnknownTotalCount = 1000
+
 type Pager struct {
 	Name       string
 	Page       int

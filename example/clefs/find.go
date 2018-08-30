@@ -1,6 +1,8 @@
 package clefs
 
 import (
+	"log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/ikasamt/zapp/zapp"
 )
@@ -29,6 +31,7 @@ func getAnything(c *gin.Context) (instance Anything, e error) {
 	// 対象IDを取得
 	ID, err := zapp.GetID(c)
 	if err != nil {
+		log.Println(err)
 		return instance, err
 	}
 	// DBから取得

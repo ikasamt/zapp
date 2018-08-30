@@ -30,7 +30,7 @@ type Anything struct { //generic.Type
 } //generic.Type
 
 func (any *Anything) String() string { //generic.Type
-	return fmt.Sprintf("[%d]", any.ID) //generic.Type
+	return fmt.Sprintf("[%20d]", any.ID) //generic.Type
 } //generic.Type
 
 func GetMasterDBInstance() (db *gorm.DB) { //generic.Type
@@ -266,7 +266,8 @@ func adminAnythingCreateHandler(c *gin.Context) {
 	// 完了ページへリダイレクト
 	message := fmt.Sprintf("%v 追加しました", instance)
 	zapp.SetFlashMessage(c, message)
-	controllerName, _ := zapp.ExtractControllerActionName(c)
-	backURL := fmt.Sprintf("/admin/%s/", controllerName)
+	adminPrefix := `admin`
+	controllerName, _ := zapp.ExtractControllerActionName(c.Request.URL.Path, adminPrefix)
+	backURL := fmt.Sprintf("/%s/%s", adminPrefix, controllerName)
 	c.Redirect(http.StatusFound, backURL)
 }

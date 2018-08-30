@@ -6,15 +6,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var AdminPrefix = `/admin/`
 var DefaultActionName = `list`
-var DefaultPerPage = 15
-var UnknownTotalCount = 1000
-var TemplateDir = `templates`
 
-func ExtractControllerActionName(c *gin.Context) (string, string) {
-	pathURL := strings.Replace(c.Request.URL.Path, AdminPrefix, "", 1)
-	paths := strings.Split(pathURL, `/`)
+func ExtractControllerActionName(path string, prefix string) (string, string) {
+	paths := strings.Split(path, `/`)
+
+	// first string is blacnk
+	if paths[0] == `` {
+		paths = paths[1:]
+	}
+
+	// first strings equals prefix skip it
+	// ex paths/admin/user/new and prefix= admin
+	if paths[0] == prefix {
+		paths = paths[1:]
+	}
+
 	controllerName := paths[0]
 
 	actionName := paths[1]
@@ -24,10 +31,11 @@ func ExtractControllerActionName(c *gin.Context) (string, string) {
 	return controllerName, actionName
 }
 
-func RenderAdmin(c *gin.Context, context map[string]interface{}, templateName ...string) error {
+//
+func Render(c *gin.Context, dir string, context map[string]interface{}, templateName ...string) error {
 
 	// context に controllerName, actionName を追加する
-	controllerName, actionName := ExtractControllerActionName(c)
+	controllerName, actionName := ExtractControllerActionName(c.Request.URL.Path, dir)
 	context[`controllerName`] = controllerName
 	if templateName != nil {
 		// override actionName when it sets
@@ -39,6 +47,11 @@ func RenderAdmin(c *gin.Context, context map[string]interface{}, templateName ..
 	context[`pager`] = NewPager(c, context[`total_count`])
 
 	// テンプレートファイルがなければ初期ファイルをわたす
-	RenderJade(c, `admin`, controllerName, actionName, context)
+	RenderJade(c, dir, controllerName, actionName, context)
 	return nil
+}
+
+//
+func RenderAdmmin(c *gin.Context, context map[string]interface{}, templateName ...string) error {
+	return Render(c, `admin`, context, templateName...)
 }
