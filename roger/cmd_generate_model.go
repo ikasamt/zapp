@@ -22,7 +22,12 @@ func generateModel(c *cli.Context) error {
 		ret = append(ret, `// `+table.Name)
 		lines := []string{}
 		lines = append(lines, fmt.Sprintf(`type %s struct {`, table.StructName()))
+
+		firstColumn := ``
 		for _, column := range table.Columns {
+			if firstColumn == `` {
+				firstColumn = column.Name()
+			}
 			lines = append(lines, fmt.Sprintf(`%s %s`, column.Name(), column.GoType()))
 		}
 		lines = append(lines, `	beforeJSON     gin.H`)
@@ -30,10 +35,11 @@ func generateModel(c *cli.Context) error {
 		lines = append(lines, `}`)
 		lines = append(lines, ``)
 		lines = append(lines, ``)
-		// String method
-		lines = append(lines, `func (x *`+table.StructName()+`) String() string { return fmt.Sprintf("[%d]", x.ID) }`)
+		// define Table Name
+		lines = append(lines, `func (`+table.StructName()+`) TableName() string { return "`+table.Name+`" }`)
 
-		// Search method
+		// String method
+		lines = append(lines, `func (x *`+table.StructName()+`) String() string { return fmt.Sprintf("[%d]", x.`+firstColumn+`) }`)
 
 		tmpStr := strings.Join(lines, CRLN)
 		tmpByte, err := format.Source([]byte(tmpStr))
@@ -47,5 +53,31 @@ func generateModel(c *cli.Context) error {
 	}
 	tmp := strings.Join(ret, CRLN)
 	fmt.Println(tmp)
+
+	ret2 := []string{}
+	for _, tableName := range showTables(dsn) {
+		table := descTable(dsn, tableName)
+
+		structName := table.StructName()
+		controllerName := table.Name
+
+		t := `
+		//
+		// {{ if eq $.controllerName "%s" }}
+		// li.rad.bg-blue
+		// 	span %s
+		// {{ else }}
+		// a(href='/admin/%s/')
+		// 	li.rad %s
+		// {{ end }}
+		//
+		`
+		t2 := fmt.Sprintf(t, controllerName, structName, controllerName, structName)
+		ret2 = append(ret2, t2)
+	}
+
+	tmp2 := strings.Join(ret2, CRLN)
+	fmt.Println(tmp2)
+
 	return nil
 }

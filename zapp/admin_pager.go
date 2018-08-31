@@ -83,16 +83,16 @@ func NewPager(c *gin.Context, totalCount interface{}) Pager {
 
 	// numbers
 	numbers := []int{}
-	for _, i := range []int{-9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9} {
+	for _, i := range []int{-6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6} {
 		number := pager.Page + i
-		if number <= lastPageNumber {
-			if number > 0 {
+		if number < lastPageNumber {
+			if number >= 0 {
 				numbers = append(numbers, number)
 			}
 		}
 	}
 
-	for i := range numbers {
+	for _, i := range numbers {
 		pagerLink := PagerLink{}
 		pagerLink.Number = i
 		pagerLink.Label = fmt.Sprintf("%d", i+1)
