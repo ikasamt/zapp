@@ -37,5 +37,5 @@ func (x *User) Search(q *gorm.DB) *gorm.DB {
 
 // String
 func (x *Organization) String() string {
-	return fmt.Sprintf(`[%20d] aa%saa`, x.ID, x.Name)
+	return fmt.Sprintf(`%d: %s`, x.ID, x.Name)
 }

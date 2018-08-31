@@ -16,5 +16,8 @@ go_generate: clean
 download:
 	GO111MODULE=on go mod download
 
+roger:
+	cd ../roger && go install
+
 clean:
 	rm -rf zzz-autogen-*

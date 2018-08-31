@@ -40,7 +40,7 @@ func (x Something) AnythingOptions() string {
 			ID = int(ID_.Int())
 		}
 
-		label := zapp.CallMethod(any, `String`, fmt.Sprintf(`[%d]`, any.ID))
+		label := zapp.CallMethod(any, `String`, fmt.Sprintf(`[%04d]`, any.ID))
 
 		if ID == any.ID {
 			tmp += fmt.Sprintf("<option value='%d' selected>%s</option>", any.ID, label)

@@ -8,7 +8,7 @@ import (
 
 var DefaultActionName = `list`
 
-func ExtractControllerActionName(path string, prefix string) (string, string) {
+func ExtractControllerActionName(path string, prefix string) (controllerName string, actionName string) {
 	paths := strings.Split(path, `/`)
 
 	// first string is blacnk
@@ -17,16 +17,19 @@ func ExtractControllerActionName(path string, prefix string) (string, string) {
 	}
 
 	// first strings equals prefix skip it
-	// ex paths/admin/user/new and prefix= admin
+	// ex paths=admin/user/new and prefix= admin
 	if paths[0] == prefix {
 		paths = paths[1:]
 	}
 
-	controllerName := paths[0]
-
-	actionName := paths[1]
-	if paths[1] == `` {
+	controllerName = paths[0]
+	if len(paths) == 1 {
 		actionName = DefaultActionName
+	} else {
+		actionName = paths[1]
+		if paths[1] == `` {
+			actionName = DefaultActionName
+		}
 	}
 	return controllerName, actionName
 }

@@ -7,7 +7,7 @@ import (
 	"github.com/ikasamt/zapp/zapp"
 )
 
-//go:generate genny -pkg=main -in=$GOFILE -out=../zzz-autogen-$GOFILE gen "Anything=User,Organization"
+//go:generate genny -pkg=main -in=$GOFILE -out=../zzz-autogen-$GOFILE gen "Anything=User,Organization,Report,Phrase"
 
 // select All
 func selectAllAnythings(selects string) (instances []*Anything) {

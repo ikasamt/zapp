@@ -17,7 +17,7 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-//go:generate genny -pkg=main -in=$GOFILE -out=../zzz-autogen-$GOFILE gen "Anything=User,Organization"
+//go:generate genny -pkg=main -in=$GOFILE -out=../zzz-autogen-$GOFILE gen "Anything=User,Organization,Report,Phrase"
 
 // Anything is defined as base Struct for genny
 type Anything struct { //generic.Type

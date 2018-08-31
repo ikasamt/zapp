@@ -1,14 +1,47 @@
 ul#listmenu
-    li
+    div
         strong Dashboard
-        ul
-            li
-                a(href='/admin/dashboard') Dashboard
+        div(style='padding:0px 10px 0px 20px;')
+            {{ if eq $.controllerName "dashboard" }}
+            li.rad.bg-blue
+                span Dashboard
+            {{ else }}
+            a(href='/admin/dashboard/')
+                li.rad Dashboard
+            {{ end }}
 
-    li
+    div
         strong 管理画面
-        ul
-            li
-                a(href='/admin/user/') User
-            li
-                a(href='/admin/organization/') Organization
+        div(style='padding:0px 10px 0px 20px;')
+
+            {{ if eq $.controllerName "user" }}
+            li.rad.bg-blue
+                span User
+            {{ else }}
+            a(href='/admin/user/') 
+                li.rad User
+            {{ end }}
+
+            {{ if eq $.controllerName "organization" }}
+            li.rad.bg-blue
+                span Organization
+            {{ else }}
+            a(href='/admin/organization/')
+                li.rad Organization
+            {{ end }}
+
+            {{ if eq $.controllerName "report" }}
+            li.rad.bg-blue
+                span Report
+            {{ else }}
+            a(href='/admin/report/') 
+                li.rad Report
+            {{ end }}
+
+            {{ if eq $.controllerName "phrase" }}
+            li.rad.bg-blue
+                span Phrase
+            {{ else }}
+            a(href='/admin/phrase/') 
+                li.rad Phrase
+            {{ end }}

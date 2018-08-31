@@ -12,8 +12,7 @@ import (
 const CRLN = "\r\n"
 
 func generateModel(c *cli.Context) error {
-	dsn := c.Args().First()
-	log.Println(dsn)
+	dsn := ZappEnvironment[`mysql`].(string)
 
 	ret := []string{}
 	for _, tableName := range showTables(dsn) {
@@ -35,7 +34,6 @@ func generateModel(c *cli.Context) error {
 		lines = append(lines, `func (x *`+table.StructName()+`) String() string { return fmt.Sprintf("[%d]", x.ID) }`)
 
 		// Search method
-		// lines = append(lines, `func (x *`+table.StructName()+`) Search(q *gorm.DB) *gorm.DB { return q }`)
 
 		tmpStr := strings.Join(lines, CRLN)
 		tmpByte, err := format.Source([]byte(tmpStr))
