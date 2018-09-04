@@ -7,6 +7,8 @@
 bin*
 *zzz-autogen-*
 *book*
+environments.yml
+*example*
 
 # Test binary, build with `go test -c`
 *.test

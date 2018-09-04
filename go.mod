@@ -18,6 +18,7 @@ require (
 	github.com/sendgrid/rest v2.4.1+incompatible // indirect
 	github.com/sendgrid/sendgrid-go v3.4.1+incompatible
 	github.com/ugorji/go v1.1.1 // indirect
+	github.com/urfave/cli v1.20.0
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0
 	gopkg.in/yaml.v2 v2.2.1 // indirect

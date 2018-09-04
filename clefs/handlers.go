@@ -17,8 +17,6 @@ import (
 	"github.com/jinzhu/gorm"
 )
 
-//go:generate genny -pkg=main -in=$GOFILE -out=../zzz-autogen-$GOFILE gen "Anything=User,Organization,Report,Phrase"
-
 // Anything is defined as base Struct for genny
 type Anything struct { //generic.Type
 	ID         int       //generic.Type
@@ -270,4 +268,16 @@ func adminAnythingCreateHandler(c *gin.Context) {
 	controllerName, _ := zapp.ExtractControllerActionName(c.Request.URL.Path, adminPrefix)
 	backURL := fmt.Sprintf("/%s/%s", adminPrefix, controllerName)
 	c.Redirect(http.StatusFound, backURL)
+}
+
+func AppendAnythingResources(group *gin.RouterGroup) {
+	structName := zapp.GetType(Anything{})
+	controllerName := strcase.ToSnake(structName)
+	log.Println(structName)
+	log.Println(controllerName)
+	group.GET(fmt.Sprintf("/%s/", controllerName), adminAnythingListHandler)
+	group.GET(fmt.Sprintf("/%s/new", controllerName), adminAnythingNewHandler)
+	group.GET(fmt.Sprintf("/%s/edit/:id", controllerName), adminAnythingEditHandler)
+	group.GET(fmt.Sprintf("/%s/show/:id", controllerName), adminAnythingShowHandler)
+	group.POST(fmt.Sprintf("/%s/create", controllerName), adminAnythingCreateHandler)
 }

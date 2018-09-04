@@ -13,6 +13,7 @@ import (
 	"github.com/Joker/jade"
 	humanize "github.com/dustin/go-humanize"
 	"github.com/gin-gonic/gin"
+	"github.com/iancoleman/strcase"
 )
 
 var TemplateDir = `templates`
@@ -84,10 +85,10 @@ func RenderJade(c *gin.Context, dirName string, controllerName string, actionNam
 	return err
 }
 
-func executeTemplateToHTML(templateFilename string, context map[string]interface{}) (template.HTML, error) {
+func executeTemplateToHTML(templateFilename string, funcMap template.FuncMap, context map[string]interface{}) (template.HTML, error) {
 	outPut := new(bytes.Buffer)
 	includeHTML, _ := ConvertJadeToHTML(templateFilename)
-	partialHTML, _ := template.New(templateFilename).Parse(includeHTML)
+	partialHTML, _ := template.New(templateFilename).Funcs(funcMap).Parse(includeHTML)
 	partialHTML.Execute(outPut, context)
 	return template.HTML(outPut.String()), nil
 }
@@ -100,8 +101,13 @@ func ExecuteTemplate(c *gin.Context, layoutHTML string, contentHTML string, cont
 
 	// テンプレート関数
 	funcMap := baseFuncMap()
+	funcMap[`link_to`] = func(controllerName string) (template.HTML, error) {
+		context[`__link_to_controllerName`] = controllerName
+		context[`__link_to_label`] = strcase.ToCamel(controllerName)
+		return executeTemplateToHTML(TemplateDir+"/_link_to.jade", funcMap, context)
+	}
 	funcMap[`include`] = func(includePath string) (template.HTML, error) {
-		return executeTemplateToHTML("templates/"+includePath+".jade", context)
+		return executeTemplateToHTML(TemplateDir+"/"+includePath+".jade", funcMap, context)
 	}
 
 	// 変数適用

@@ -8,8 +8,6 @@ import (
 	"github.com/ikasamt/zapp/zapp"
 )
 
-//go:generate genny -pkg=main -in=$GOFILE -out=../zzz-autogen-$GOFILE gen "Anything=Organization Something=User"
-
 type Something struct { //generic.Type
 	ID         int   //generic.Type
 	UserID     int   //generic.Type

@@ -3,6 +3,7 @@ package zapp
 import (
 	"io/ioutil"
 
+	"github.com/gin-gonic/gin"
 	yaml "gopkg.in/yaml.v1"
 )
 
@@ -17,4 +18,11 @@ func ReadEnvironments() map[string]Environment {
 	yaml.Unmarshal(value, &ret1)
 
 	return ret1
+}
+
+func (env *Environment) AdminBasicauth() gin.HandlerFunc {
+	adminBasicauthName := (*env)[`admin_basicauth_name`].(string)
+	adminBasicauthPassword := (*env)[`admin_basicauth_password`].(string)
+	adminAccount := gin.Accounts{adminBasicauthName: adminBasicauthPassword}
+	return gin.BasicAuth(adminAccount)
 }

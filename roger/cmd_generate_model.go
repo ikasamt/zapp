@@ -14,9 +14,13 @@ const CRLN = "\r\n"
 func generateModel(c *cli.Context) error {
 	dsn := ZappEnvironment[`mysql`].(string)
 
+	var tablesCache []MySQLTable
+
 	ret := []string{}
 	for _, tableName := range showTables(dsn) {
 		table := descTable(dsn, tableName)
+		tablesCache = append(tablesCache, table)
+
 		// struct
 		ret = append(ret, ``)
 		ret = append(ret, `// `+table.Name)
@@ -55,24 +59,11 @@ func generateModel(c *cli.Context) error {
 	fmt.Println(tmp)
 
 	ret2 := []string{}
-	for _, tableName := range showTables(dsn) {
-		table := descTable(dsn, tableName)
-
-		structName := table.StructName()
+	for _, table := range tablesCache {
 		controllerName := table.Name
 
-		t := `
-		//
-		// {{ if eq $.controllerName "%s" }}
-		// li.rad.bg-blue
-		// 	span %s
-		// {{ else }}
-		// a(href='/admin/%s/')
-		// 	li.rad %s
-		// {{ end }}
-		//
-		`
-		t2 := fmt.Sprintf(t, controllerName, structName, controllerName, structName)
+		t := `// {{ link_to "%s" }}`
+		t2 := fmt.Sprintf(t, controllerName)
 		ret2 = append(ret2, t2)
 	}
 

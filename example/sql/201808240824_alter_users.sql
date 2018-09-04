@@ -1,1 +1,0 @@
-ALTER TABLE `users` ADD department VARCHAR(255);

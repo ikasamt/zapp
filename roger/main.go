@@ -27,14 +27,20 @@ func main() {
 		{
 			Name:    "generateModel",
 			Aliases: []string{"gm"},
-			Usage:   "generate db-model structs from database desc. This command needs `dsn` string  like app:@tcp(127.0.0.1:3306)/myapp ",
+			Usage:   "generate db-model structs from database desc. This command needs config/environment.yml ",
 			Action:  generateModel,
 		},
 		{
 			Name:    "migration",
 			Aliases: []string{"mi"},
-			Usage:   "migrate each sql queries to database. This command needs `dsn` string  like app:@tcp(127.0.0.1:3306)/myapp ",
+			Usage:   "migrate each sql queries to database. This command needs config/environment.yml",
 			Action:  migration,
+		},
+		{
+			Name:    "new",
+			Aliases: []string{"n"},
+			Usage:   "create new project. This command needs project name",
+			Action:  new,
 		},
 	}
 	app.Run(os.Args)

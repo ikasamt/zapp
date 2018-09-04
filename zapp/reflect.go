@@ -28,6 +28,6 @@ func HasMethod(obj interface{}, methodName string) bool {
 	return false
 }
 
-func GetType(myvar interface{}) string {
-	return reflect.TypeOf(myvar).Name()
+func GetType(obj interface{}) string {
+	return reflect.TypeOf(obj).Name()
 }

@@ -37,13 +37,18 @@ func ExtractControllerActionName(path string, prefix string) (controllerName str
 //
 func Render(c *gin.Context, dir string, context map[string]interface{}, templateName ...string) error {
 
-	// context に controllerName, actionName を追加する
-	controllerName, actionName := ExtractControllerActionName(c.Request.URL.Path, dir)
-	context[`controllerName`] = controllerName
+	var controllerName, actionName string
+
 	if templateName != nil {
 		// override actionName when it sets
-		actionName = templateName[0]
+		tmp := strings.Split(templateName[0], `/`)
+		controllerName = tmp[0]
+		actionName = tmp[1]
+	} else {
+		// context に controllerName, actionName を追加する
+		controllerName, actionName = ExtractControllerActionName(c.Request.URL.Path, dir)
 	}
+	context[`controllerName`] = controllerName
 	context[`actionName`] = actionName
 
 	// ページネーション
