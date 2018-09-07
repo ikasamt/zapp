@@ -4,9 +4,9 @@
 *.dll
 *.so
 *.dylib
+.DS_Store
 bin*
 *zzz-autogen-*
-*book*
 environments.yml
 *example*
 
