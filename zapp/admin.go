@@ -39,14 +39,17 @@ func Render(c *gin.Context, dir string, context map[string]interface{}, template
 
 	var controllerName, actionName string
 
+	// context に controllerName, actionName を追加する
+	controllerName, actionName = ExtractControllerActionName(c.Request.URL.Path, dir)
 	if templateName != nil {
 		// override actionName when it sets
 		tmp := strings.Split(templateName[0], `/`)
-		controllerName = tmp[0]
-		actionName = tmp[1]
-	} else {
-		// context に controllerName, actionName を追加する
-		controllerName, actionName = ExtractControllerActionName(c.Request.URL.Path, dir)
+		if len(tmp) == 1 {
+			actionName = tmp[0]
+		} else {
+			controllerName = tmp[0]
+			actionName = tmp[1]
+		}
 	}
 	context[`controllerName`] = controllerName
 	context[`actionName`] = actionName

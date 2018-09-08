@@ -36,13 +36,13 @@ func GetMasterDBInstance() (db *gorm.DB) { //generic.Type
 	return                         //generic.Type
 } //generic.Type
 
-func (any *Anything) AsJSON() gin.H {
-	return gin.H{
-		"id":         any.ID,
-		"created_at": any.CreatedAt,
-		"updated_at": any.UpdatedAt,
-	}
-}
+func (any *Anything) AsJSON() gin.H { //generic.Type
+	return gin.H{ //generic.Type
+		"id":         any.ID,        //generic.Type
+		"created_at": any.CreatedAt, //generic.Type
+		"updated_at": any.UpdatedAt, //generic.Type
+	} //generic.Type
+} //generic.Type
 
 func (any *Anything) Set(c *gin.Context) {
 	r := reflect.ValueOf(any)
@@ -64,7 +64,7 @@ func (any *Anything) Validate() {
 	}
 }
 
-func (any *Anything) Diff() gin.H {
+func (any Anything) Diff() gin.H {
 	// 現在と元のデータの違い
 	var afterJSON gin.H
 	j := zapp.CallMethod(any, `AsJSON`, nil)
@@ -86,7 +86,7 @@ func (any *Anything) Diff() gin.H {
 	return diff
 }
 
-func (any *Anything) GetErrors(key string) []string {
+func (any Anything) GetErrors(key string) []string {
 	if any.errors == nil {
 		return []string{}
 	}
@@ -113,14 +113,14 @@ func (any *Anything) GetErrors(key string) []string {
 }
 
 // GetValueAndName
-func (any *Anything) GetValueAndName(key string) (value reflect.Value, name string) {
-	value = reflect.ValueOf(any).Elem().FieldByName(key)
+func (any Anything) GetValueAndName(key string) (value reflect.Value, name string) {
+	value = reflect.ValueOf(&any).Elem().FieldByName(key)
 	name = strcase.ToSnake(strings.Replace(key, "ID", "Id", 1))
 	return
 }
 
 // CheckboxField
-func (any *Anything) CheckboxField(key string) template.HTML {
+func (any Anything) CheckboxField(key string) template.HTML {
 	value, name := any.GetValueAndName(key)
 
 	if value.Interface().(bool) {
@@ -130,7 +130,7 @@ func (any *Anything) CheckboxField(key string) template.HTML {
 }
 
 // TextField
-func (any *Anything) TextField(key string) template.HTML {
+func (any Anything) TextField(key string) template.HTML {
 	value, name := any.GetValueAndName(key)
 
 	inputText := fmt.Sprintf("<input type='text' name='%s' value='%v' />", name, value)
@@ -146,7 +146,7 @@ func (any *Anything) TextField(key string) template.HTML {
 }
 
 // SelectField
-func (any *Anything) SelectField(key string, options string) template.HTML {
+func (any Anything) SelectField(key string, options string) template.HTML {
 	_, name := any.GetValueAndName(key)
 
 	inputText := ``
@@ -178,7 +178,7 @@ func SaveAnything(db *gorm.DB, any *Anything) *gorm.DB {
 	return db
 }
 
-func searchAnythings(c *gin.Context, any *Anything) (count int, instances []Anything) {
+func searchAnythings(c *gin.Context, any Anything) (count int, instances []Anything) {
 	// DB接続を取得
 	db := GetMasterDBInstance()
 	defer db.Close()
@@ -208,7 +208,7 @@ func searchAnythings(c *gin.Context, any *Anything) (count int, instances []Anyt
 
 // List
 func adminAnythingListHandler(c *gin.Context) {
-	instance := &Anything{}
+	instance := Anything{}
 	instance.Set(c)
 	totalCount, instances := searchAnythings(c, instance)
 	context := map[string]interface{}{"instances": instances, "instance": instance, "total_count": totalCount}
@@ -255,9 +255,6 @@ func adminAnythingCreateHandler(c *gin.Context) {
 	}
 
 	// 値の更新 ------------------------------------------>
-	log.Println(`-----`)
-	log.Println(instance)
-	log.Println(`-----`)
 	SaveAnything(db, instance)
 	// <-------------------------------------------------
 
@@ -267,6 +264,38 @@ func adminAnythingCreateHandler(c *gin.Context) {
 	adminPrefix := `admin`
 	controllerName, _ := zapp.ExtractControllerActionName(c.Request.URL.Path, adminPrefix)
 	backURL := fmt.Sprintf("/%s/%s", adminPrefix, controllerName)
+	c.Redirect(http.StatusFound, backURL)
+}
+
+// Update
+func adminAnythingUpdateHandler(c *gin.Context) {
+	// DB接続を取得
+	db := GetMasterDBInstance()
+	defer db.Close()
+
+	a, err := getAnything(c)
+	instance := &a
+	if err != nil {
+		zapp.RenderDirect(c, `admin/500`, map[string]interface{}{"message": err})
+		return
+	}
+
+	instance.Set(c)
+	instance.Validate()
+	if instance.errors != nil {
+		context := map[string]interface{}{"instance": instance}
+		zapp.Render(c, `admin`, context, `edit`)
+		return
+	}
+
+	// 値の更新 ------------------------------------------>
+	SaveAnything(db, instance)
+	// <-------------------------------------------------
+
+	// 完了ページへリダイレクト
+	adminPrefix := `admin`
+	controllerName, _ := zapp.ExtractControllerActionName(c.Request.URL.Path, adminPrefix)
+	backURL := fmt.Sprintf("/%s/%s/show/%d", adminPrefix, controllerName, instance.ID)
 	c.Redirect(http.StatusFound, backURL)
 }
 
@@ -280,4 +309,5 @@ func AppendAnythingResources(group *gin.RouterGroup) {
 	group.GET(fmt.Sprintf("/%s/edit/:id", controllerName), adminAnythingEditHandler)
 	group.GET(fmt.Sprintf("/%s/show/:id", controllerName), adminAnythingShowHandler)
 	group.POST(fmt.Sprintf("/%s/create", controllerName), adminAnythingCreateHandler)
+	group.POST(fmt.Sprintf("/%s/update", controllerName), adminAnythingUpdateHandler)
 }

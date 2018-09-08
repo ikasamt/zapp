@@ -20,7 +20,7 @@ func ReadEnvironments() map[string]Environment {
 	return ret1
 }
 
-func (env *Environment) AdminBasicauth() gin.HandlerFunc {
+func AdminBasicauth(env *Environment) gin.HandlerFunc {
 	adminBasicauthName := (*env)[`admin_basicauth_name`].(string)
 	adminBasicauthPassword := (*env)[`admin_basicauth_password`].(string)
 	adminAccount := gin.Accounts{adminBasicauthName: adminBasicauthPassword}

@@ -11,8 +11,8 @@ import (
 func GetParams(c *gin.Context, key string) string {
 
 	// URL内のパラメータを優先
-	if c.Param("id") != `` {
-		return c.Param("id")
+	if c.Param(key) != `` {
+		return c.Param(key)
 	}
 
 	// Post

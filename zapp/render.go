@@ -60,6 +60,7 @@ func ConvertJadeToHTML(templateFilename string) (html string, err error) {
 		log.Println(err)
 		return "", err
 	}
+	log.Println(templateFilename)
 	return html, nil
 }
 
@@ -76,7 +77,7 @@ func RenderJade(c *gin.Context, dirName string, controllerName string, actionNam
 		fn = filepath.Join(TemplateDir, dirName, dir, actionName+".jade")
 		contentHTML, err := ConvertJadeToHTML(fn)
 		if err == nil {
-			return ExecuteTemplate(c, layoutHTML, contentHTML, context)
+			return ExecuteTemplate(c, dirName, controllerName, layoutHTML, contentHTML, context)
 		}
 		// log.Println(err)
 	}
@@ -87,27 +88,48 @@ func RenderJade(c *gin.Context, dirName string, controllerName string, actionNam
 
 func executeTemplateToHTML(templateFilename string, funcMap template.FuncMap, context map[string]interface{}) (template.HTML, error) {
 	outPut := new(bytes.Buffer)
-	includeHTML, _ := ConvertJadeToHTML(templateFilename)
-	partialHTML, _ := template.New(templateFilename).Funcs(funcMap).Parse(includeHTML)
-	partialHTML.Execute(outPut, context)
+	includeHTML, err := ConvertJadeToHTML(templateFilename)
+	if err != nil {
+		log.Println(err)
+		return template.HTML(``), err
+	}
+	partialHTML, err := template.New(templateFilename).Funcs(funcMap).Parse(includeHTML)
+	if err != nil {
+		log.Println(err)
+		return template.HTML(``), err
+	}
+	err = partialHTML.Execute(outPut, context)
+	if err != nil {
+		log.Println(err)
+		return template.HTML(``), err
+	}
 	return template.HTML(outPut.String()), nil
 }
 
 //
-func ExecuteTemplate(c *gin.Context, layoutHTML string, contentHTML string, context map[string]interface{}) error {
+func ExecuteTemplate(c *gin.Context, dirName string, controllerName string, layoutHTML string, contentHTML string, context map[string]interface{}) error {
 
 	// session由来の変数を当てはめる
 	context["flashMessage"] = GetFlashMessage(c)
 
 	// テンプレート関数
 	funcMap := baseFuncMap()
-	funcMap[`link_to`] = func(controllerName string) (template.HTML, error) {
-		context[`__link_to_controllerName`] = controllerName
-		context[`__link_to_label`] = strcase.ToCamel(controllerName)
+	funcMap[`link_to`] = func(name string) (template.HTML, error) {
+		context[`__link_to_controllerName`] = name
+		context[`__link_to_label`] = strcase.ToCamel(name)
 		return executeTemplateToHTML(TemplateDir+"/_link_to.jade", funcMap, context)
 	}
 	funcMap[`include`] = func(includePath string) (template.HTML, error) {
-		return executeTemplateToHTML(TemplateDir+"/"+includePath+".jade", funcMap, context)
+		retval, err := executeTemplateToHTML(TemplateDir+"/"+dirName+"/"+controllerName+"/"+includePath+".jade", funcMap, context)
+		if err == nil {
+			return retval, nil
+		}
+		retval, err = executeTemplateToHTML(TemplateDir+"/"+includePath+".jade", funcMap, context)
+		if err == nil {
+			return retval, nil
+		}
+
+		return retval, nil
 	}
 
 	// 変数適用
@@ -123,5 +145,35 @@ func ExecuteTemplate(c *gin.Context, layoutHTML string, contentHTML string, cont
 		log.Println(err)
 		return err
 	}
+	return nil
+}
+
+func RenderDirect(c *gin.Context, templateFilename string, context interface{}) error {
+
+	// 個別ファイル読み込み
+	data, err := ioutil.ReadFile(TemplateDir + "/" + templateFilename + ".jade")
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+	contentmpl, err := jade.Parse("template", string(data))
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	// 変数適用
+	tmpl, err := template.New("contentmpl").Parse(contentmpl)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
+	err = tmpl.Execute(c.Writer, context)
+	if err != nil {
+		log.Println(err)
+		return err
+	}
+
 	return nil
 }
