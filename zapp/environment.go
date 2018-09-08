@@ -9,15 +9,18 @@ import (
 
 type Environment map[string]interface{}
 
-func ReadEnvironments() map[string]Environment {
+func ReadEnvironments() (map[string]Environment, error) {
 
 	fn := "./config/environments.yml"
-	value, _ := ioutil.ReadFile(fn)
+	value, err := ioutil.ReadFile(fn)
+	if err != nil {
+		return nil, err
+	}
 
 	ret1 := make(map[string]Environment)
 	yaml.Unmarshal(value, &ret1)
 
-	return ret1
+	return ret1, nil
 }
 
 func AdminBasicauth(env *Environment) gin.HandlerFunc {
