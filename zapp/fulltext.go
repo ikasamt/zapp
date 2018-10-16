@@ -1,30 +1,40 @@
 package zapp
 
 import (
+	"context"
+	"fmt"
+	"strconv"
 	"strings"
+	"time"
 
-	"github.com/ikasamt/zapp/zapp"
+	"google.golang.org/appengine/log"
+	"google.golang.org/appengine/search"
 )
 
+type Fulltext struct {
+	Ngram     string
+	CreatedAt time.Time
+	UpdatedAt time.Time
+}
+
 func SplitNgrams(text string, n int) []string {
-	sep_text := strings.Split(text, "")
+	sepText := strings.Split(text, "")
 	var ngrams []string
-	if len(sep_text) < n {
+	if len(sepText) < n {
 		return nil
 	}
-	for i := 0; i < (len(sep_text) - n + 1); i++ {
-		ngrams = append(ngrams, strings.Join(sep_text[i:i+n], ""))
+	for i := 0; i < (len(sepText) - n + 1); i++ {
+		ngrams = append(ngrams, strings.Join(sepText[i:i+n], ""))
 	}
 	return ngrams
 }
 
 func SplitNgramsRange(text string, size int) (ngrams []string) {
-	for i:=0;i=<size;i++ {
-		ngrams = append(ngrams, zapp.SplitNgrams(text, i)...)
+	for i := 0; i <= size; i++ {
+		ngrams = append(ngrams, SplitNgrams(text, i)...)
 	}
 	return
 }
-
 
 func WordToSplittedWords(word string) []string {
 	qSize := len(strings.Split(word, ``))
@@ -43,8 +53,6 @@ func WordToSplittedWords(word string) []string {
 	uniq := UniqString(splits)
 	return uniq
 }
-
-
 
 func SearchByGAEFulltext(ctx context.Context, idx string, words []string) []int {
 	values := []string{}

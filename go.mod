@@ -8,7 +8,6 @@ require (
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-sql-driver/mysql v1.4.0
 	github.com/golang/go v0.0.0-20180823061048-c5d38b896df5
-	github.com/golang/protobuf v1.2.0 // indirect
 	github.com/gorilla/sessions v1.1.1 // indirect
 	github.com/iancoleman/strcase v0.0.0-20180726023541-3605ed457bf7
 	github.com/jinzhu/gorm v1.9.1
@@ -19,6 +18,7 @@ require (
 	github.com/sendgrid/sendgrid-go v3.4.1+incompatible
 	github.com/ugorji/go v1.1.1 // indirect
 	github.com/urfave/cli v1.20.0
+	google.golang.org/appengine v1.2.0
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0
 	gopkg.in/yaml.v2 v2.2.1 // indirect
