@@ -3,22 +3,11 @@ package main
 import (
 	"os"
 
-	"github.com/ikasamt/zapp/zapp"
 	"github.com/urfave/cli"
 )
 
-var ZappEnv *string
-var ZappEnvironment zapp.Environment
-
 func main() {
 	// YAML 設定ファイル読み込み
-	ZappEnv := os.Getenv("ZAPP_ENV")
-	if ZappEnv == `` {
-		ZappEnv = "development"
-	}
-	ZappEnvironments := zapp.ReadEnvironments()
-	ZappEnvironment = ZappEnvironments[ZappEnv]
-
 	app := cli.NewApp()
 	app.Name = "Roger"
 	app.Usage = "This app for zapp"

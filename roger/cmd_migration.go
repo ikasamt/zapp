@@ -78,7 +78,7 @@ func createRogerMigrated(dsn string) {
 }
 
 func migration(c *cli.Context) error {
-	dsn := ZappEnvironment[`mysql`].(string)
+	dsn := c.Args()[0]
 	log.Println(dsn)
 
 	if !rogerMigratedTableFound(dsn) {

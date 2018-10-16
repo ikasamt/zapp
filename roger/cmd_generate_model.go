@@ -12,7 +12,7 @@ import (
 const CRLN = "\r\n"
 
 func generateModel(c *cli.Context) error {
-	dsn := ZappEnvironment[`mysql`].(string)
+	dsn := c.Args()[0]
 
 	var tablesCache []MySQLTable
 
