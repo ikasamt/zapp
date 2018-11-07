@@ -65,6 +65,10 @@ func baseFuncMap() template.FuncMap {
 			t := strcase.ToCamel(text)
 			return template.HTML(t)
 		},
+		"ToSnake": func(text string) template.HTML {
+			t := strcase.ToSnake(text)
+			return template.HTML(t)
+		},
 	}
 }
 
