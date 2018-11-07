@@ -29,3 +29,7 @@ func AdminBasicauth(env *Environment) gin.HandlerFunc {
 	adminAccount := gin.Accounts{adminBasicauthName: adminBasicauthPassword}
 	return gin.BasicAuth(adminAccount)
 }
+
+func (x *Environment) GetString(key string) string {
+	return (*x)[key].(string)
+}

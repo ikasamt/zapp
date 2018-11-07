@@ -14,7 +14,7 @@ require (
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a
 	github.com/mattn/go-isatty v0.0.3 // indirect
 	github.com/pmezard/go-difflib v0.0.0-20160110105554-792786c7400a
-	github.com/sendgrid/rest v2.4.1+incompatible // indirect
+	github.com/sendgrid/rest v2.4.1+incompatible
 	github.com/sendgrid/sendgrid-go v3.4.1+incompatible
 	github.com/ugorji/go v1.1.1 // indirect
 	github.com/urfave/cli v1.20.0

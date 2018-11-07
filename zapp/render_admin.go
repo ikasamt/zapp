@@ -1,36 +1,39 @@
 package zapp
 
 import (
+	"log"
 	"strings"
 
 	"github.com/gin-gonic/gin"
 )
 
-var DefaultActionName = `list`
+var DefaultActionName = `index`
 
 func ExtractControllerActionName(path string, prefix string) (controllerName string, actionName string) {
-	paths := strings.Split(path, `/`)
 
-	// first string is blacnk
-	if paths[0] == `` {
-		paths = paths[1:]
+	tmp := strings.TrimPrefix(path, "/"+prefix)
+	if tmp == `/` {
+		controllerName = `top`
+		actionName = `index`
+		return
 	}
 
-	// first strings equals prefix skip it
-	// ex paths=admin/user/new and prefix= admin
-	if paths[0] == prefix {
-		paths = paths[1:]
-	}
+	tmp2 := strings.Split(tmp, `.`)
+	tmp3 := strings.Trim(tmp2[0], `/`)
+	paths := strings.Split(tmp3, `/`)
 
-	controllerName = paths[0]
-	if len(paths) == 1 {
-		actionName = DefaultActionName
-	} else {
+	switch len(paths) {
+	case 1:
+		// paths == [foo], path='/foo'
+		controllerName = paths[0]
+		actionName = `index`
+	case 2, 3:
+		// paths == [foo bar], path='/foo/bar'
+		controllerName = paths[0]
 		actionName = paths[1]
-		if paths[1] == `` {
-			actionName = DefaultActionName
-		}
 	}
+
+	log.Println(controllerName, actionName)
 	return controllerName, actionName
 }
 
@@ -53,6 +56,9 @@ func Render(c *gin.Context, dir string, context map[string]interface{}, template
 	}
 	context[`controllerName`] = controllerName
 	context[`actionName`] = actionName
+	log.Println(`-----`)
+	log.Println(dir, controllerName, actionName)
+	log.Println(`-----`)
 
 	// ページネーション
 	context[`pager`] = NewPager(c, context[`total_count`])

@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"log"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"html/template"
@@ -38,11 +39,27 @@ func baseFuncMap() template.FuncMap {
 		"FormatNumber": func(value float64) string {
 			return fmt.Sprintf("%.2f", value)
 		},
-		"FormatJST": func(value time.Time) string {
+		"FormatJST": func(value time.Time, fmt string) string {
+			return value.Format(fmt)
+		},
+		"FormatJSTTime": func(value time.Time) string {
+			return value.Format("15:04")
+		},
+		"FormatJSTDay": func(value time.Time) string {
+			return value.Format("2006/01/02")
+		},
+		"FormatJSTM": func(value time.Time) string {
+			return value.Format("2006/01/02 15:04")
+		},
+		"FormatJSTL": func(value time.Time) string {
 			return value.Format("2006/01/02 15:04:05")
 		},
 		"safehtml": func(text string) template.HTML {
 			return template.HTML(text)
+		},
+		"nl2br": func(text string) template.HTML {
+			t := strings.Replace(text, "\n", `<br/>`, -1)
+			return template.HTML(t)
 		},
 	}
 }
@@ -51,16 +68,13 @@ func baseFuncMap() template.FuncMap {
 func ConvertJadeToHTML(templateFilename string) (html string, err error) {
 	jadeBytes, err := ioutil.ReadFile(templateFilename)
 	if err != nil {
-		log.Println(err)
 		return "", err
 	}
 
 	html, err = jade.Parse(templateFilename, string(jadeBytes))
 	if err != nil {
-		log.Println(err)
 		return "", err
 	}
-	log.Println(templateFilename)
 	return html, nil
 }
 
@@ -112,6 +126,17 @@ func ExecuteTemplate(c *gin.Context, dirName string, controllerName string, layo
 	// session由来の変数を当てはめる
 	context["flashMessage"] = GetFlashMessage(c)
 
+	// for GAE
+	_, isDev := c.Get("__is_dev")
+	if isDev {
+		context[`__is_dev`] = true
+	}
+
+	me, ok := c.Get("me")
+	if ok {
+		context[`me`] = me
+	}
+
 	// テンプレート関数
 	funcMap := baseFuncMap()
 	funcMap[`link_to`] = func(name string) (template.HTML, error) {
@@ -128,8 +153,8 @@ func ExecuteTemplate(c *gin.Context, dirName string, controllerName string, layo
 		if err == nil {
 			return retval, nil
 		}
-
-		return retval, nil
+		log.Println(err)
+		return retval, err
 	}
 
 	// 変数適用

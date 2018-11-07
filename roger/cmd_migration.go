@@ -6,6 +6,7 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 
 	"github.com/urfave/cli"
@@ -103,7 +104,12 @@ func migration(c *cli.Context) error {
 					log.Println(err)
 				}
 				sqlStr := string(sqlBytes)
-				db.Exec(sqlStr)
+				for _, s := range strings.Split(sqlStr, `;`) {
+					log.Println("===============")
+					log.Println(s)
+					_, err2 := db.Exec(s)
+					log.Println(fmt.Sprintf(`Migrate Err: %s`, err2))
+				}
 				log.Println(fmt.Sprintf(`Migrate: %s`, f.Name()))
 
 				insertSQL := `INSERT INTO %s (name, created_at, updated_at) VALUES ( "%s" , NOW(), NOW()) `

@@ -3,6 +3,7 @@ package zapp
 import (
 	"log"
 
+	"github.com/gin-gonic/gin"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 )
@@ -15,4 +16,9 @@ func GetDBInstance(dsn string) (db *gorm.DB) {
 	}
 	db.LogMode(true)
 	return db
+}
+
+// db 接続を返す
+func DB(c *gin.Context) (db *gorm.DB) {
+	return c.MustGet("DB").(*gorm.DB)
 }
