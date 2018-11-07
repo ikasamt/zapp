@@ -61,6 +61,10 @@ func baseFuncMap() template.FuncMap {
 			t := strings.Replace(text, "\n", `<br/>`, -1)
 			return template.HTML(t)
 		},
+		"ToCamel": func(text string) template.HTML {
+			t := strcase.ToCamel(text)
+			return template.HTML(t)
+		},
 	}
 }
 
