@@ -91,6 +91,7 @@ func RenderJade(c *gin.Context, dirName string, controllerName string, actionNam
 	fn := filepath.Join(TemplateDir, dirName, "layout.jade")
 	layoutHTML, err := ConvertJadeToHTML(fn)
 	if err != nil {
+		log.Println(TemplateDir, dirName)
 		log.Println(err)
 		return err
 	}

@@ -56,9 +56,6 @@ func Render(c *gin.Context, dir string, context map[string]interface{}, template
 	}
 	context[`controllerName`] = controllerName
 	context[`actionName`] = actionName
-	log.Println(`-----`)
-	log.Println(dir, controllerName, actionName)
-	log.Println(`-----`)
 
 	// ページネーション
 	context[`pager`] = NewPager(c, context[`total_count`])
