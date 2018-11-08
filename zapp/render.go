@@ -79,7 +79,7 @@ func ConvertJadeToHTML(templateFilename string) (html string, err error) {
 		return "", err
 	}
 
-	html, err = jade.Parse(templateFilename, string(jadeBytes))
+	html, err = jade.Parse(templateFilename, jadeBytes)
 	if err != nil {
 		return "", err
 	}
@@ -189,7 +189,7 @@ func RenderDirect(c *gin.Context, templateFilename string, context interface{}) 
 		log.Println(err)
 		return err
 	}
-	contentmpl, err := jade.Parse("template", string(data))
+	contentmpl, err := jade.Parse("template", data)
 	if err != nil {
 		log.Println(err)
 		return err
