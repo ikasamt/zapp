@@ -11,10 +11,10 @@ import (
 
 	"html/template"
 
-	"github.com/Joker/jade"
 	humanize "github.com/dustin/go-humanize"
 	"github.com/gin-gonic/gin"
 	"github.com/iancoleman/strcase"
+	"github.com/ikasamt/jade"
 )
 
 var TemplateDir = `templates`
@@ -79,7 +79,7 @@ func ConvertJadeToHTML(templateFilename string) (html string, err error) {
 		return "", err
 	}
 
-	html, err = jade.Parse(templateFilename, jadeBytes)
+	html, err = jade.Parse(templateFilename, string(jadeBytes))
 	if err != nil {
 		return "", err
 	}
@@ -190,7 +190,7 @@ func RenderDirect(c *gin.Context, templateFilename string, context interface{}) 
 		log.Println(err)
 		return err
 	}
-	contentmpl, err := jade.Parse("template", data)
+	contentmpl, err := jade.Parse(templateFilename, string(data))
 	if err != nil {
 		log.Println(err)
 		return err
