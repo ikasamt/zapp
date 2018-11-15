@@ -8,7 +8,7 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1
 	github.com/gorilla/sessions v1.1.3 // indirect
 	github.com/iancoleman/strcase v0.0.0-20180726023541-3605ed457bf7
-	github.com/ikasamt/jade v0.8.0
+	github.com/ikasamt/jade v0.8.0+incompatible
 	github.com/jinzhu/gorm v1.9.1
 	github.com/jinzhu/inflection v0.0.0-20180308033659-04140366298a // indirect
 	github.com/mattn/go-isatty v0.0.4 // indirect
