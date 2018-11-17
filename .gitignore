@@ -9,6 +9,7 @@ bin*
 *zzz-autogen-*
 environments.yml
 *example*
+.idea
 
 # Test binary, build with `go test -c`
 *.test
