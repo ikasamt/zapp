@@ -40,7 +40,7 @@ func baseFuncMap() template.FuncMap {
 			tmp := fmt.Sprintf("%v", value)
 			// 指定した複数の単語をハイライトする
 			for _, t := range ts {
-				tmp = strings.Replace(tmp, t, fmt.Sprintf("<b>%s</b>", t), 10)
+				tmp = strings.Replace(tmp, t, fmt.Sprintf("<div class='hightlighted'>%s</div>", t), 10)
 			}
 			return template.HTML(tmp)
 		},

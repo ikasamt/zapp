@@ -57,6 +57,8 @@ func Render(c *gin.Context, dir string, context map[string]interface{}, template
 	context[`controllerName`] = controllerName
 	context[`actionName`] = actionName
 
+	context[`CalendarSupport`] = CalendarSupport{Now: time.Now()}
+
 	// ページネーション
 	context[`pager`] = NewPager(c, context[`total_count`])
 
