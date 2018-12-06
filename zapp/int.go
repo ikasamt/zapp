@@ -1,6 +1,11 @@
 package zapp
 
-import "strconv"
+import (
+	"fmt"
+	"sort"
+	"strconv"
+	"strings"
+)
 
 func MapAtoi(ss []string) []int {
 	tmp := []int{}
@@ -31,4 +36,24 @@ func uniqInt(list []int) []int {
 		}
 	}
 	return uniqList
+}
+
+func MapItoA(ints []int) []string {
+	tmp := []string{}
+	for _, i := range ints {
+		tmp = append(tmp, fmt.Sprintf("%d", i))
+	}
+	return tmp
+}
+
+func JoinIntSliceToString(ss []int) string {
+	StrSlice := MapItoA(ss)
+	return strings.Join(StrSlice, " ")
+}
+
+func SplitStringToIntSlice(s string) []int {
+	strs := strings.Split(s, " ")
+	IDs := MapAtoi(strs)
+	sort.Ints(IDs)
+	return IDs
 }
