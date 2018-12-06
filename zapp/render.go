@@ -36,6 +36,14 @@ func baseFuncMap() template.FuncMap {
 				return fmt.Sprintf(`unknown comma error(%s)`, t)
 			}
 		},
+		"Highlight": func(value interface{}, ts []string) template.HTML {
+			tmp := fmt.Sprintf("%v", value)
+			// 指定した複数の単語をハイライトする
+			for _, t := range ts {
+				tmp = strings.Replace(tmp, t, fmt.Sprintf("<div class='hightlighted'>%s</div>", t), 10)
+			}
+			return template.HTML(tmp)
+		},
 		"FormatNumber": func(value float64) string {
 			return fmt.Sprintf("%.2f", value)
 		},

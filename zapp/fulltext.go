@@ -85,3 +85,23 @@ func SearchByGAEFulltext(ctx context.Context, idx string, words []string) []int 
 	}
 	return IDs
 }
+
+func QueryToSearchwords(q string) (searchWords []string){
+	// 半角・全角で区切る
+	for _, word := range strings.Split(q, ` `) { // 半角
+		for _, w := range strings.Split(word, `　`) { // 全角
+			if w != `` {
+				searchWords = append(searchWords, w)
+			}
+		}
+	}
+	return
+}
+
+
+func FindBySeachGAE(ctx context.Context, idx string, q string) (anyIDs []int) {
+	q = strings.Trim(q, ` `) // 前後の空白を除く
+	searchWords := QueryToSearchwords(q)
+	anyIDs = SearchByGAEFulltext(ctx, idx, searchWords)
+	return
+}

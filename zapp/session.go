@@ -1,6 +1,7 @@
 package zapp
 
 import (
+	"log"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 )
@@ -19,7 +20,8 @@ func GetSession(c *gin.Context, key string, defaultValue interface{}) interface{
 func SetSession(c *gin.Context, key string, value interface{}) {
 	session := sessions.Default(c)
 	session.Set(key, value)
-	session.Save()
+	err:=session.Save()
+	log.Println(err)
 }
 
 // Flashメッセージを取得する
