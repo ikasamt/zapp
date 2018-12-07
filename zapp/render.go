@@ -73,6 +73,8 @@ func baseFuncMap() template.FuncMap {
 			t := strcase.ToCamel(text)
 			return template.HTML(t)
 		},
+		"add": func(a, b int) int { return a + b },
+		"sub": func(a, b int) int { return a - b },
 		"ToSnake": func(text string) template.HTML {
 			t := strcase.ToSnake(text)
 			return template.HTML(t)
@@ -137,6 +139,8 @@ func executeTemplateToHTML(templateFilename string, funcMap template.FuncMap, co
 	return template.HTML(outPut.String()), nil
 }
 
+var TemplateFuncMap = baseFuncMap()
+
 //
 func ExecuteTemplate(c *gin.Context, dirName string, controllerName string, layoutHTML string, contentHTML string, context map[string]interface{}) error {
 
@@ -155,18 +159,17 @@ func ExecuteTemplate(c *gin.Context, dirName string, controllerName string, layo
 	}
 
 	// テンプレート関数
-	funcMap := baseFuncMap()
-	funcMap[`link_to`] = func(name string) (template.HTML, error) {
+	TemplateFuncMap[`link_to`] = func(name string) (template.HTML, error) {
 		context[`__link_to_controllerName`] = name
 		context[`__link_to_label`] = strcase.ToCamel(name)
-		return executeTemplateToHTML(TemplateDir+"/_link_to.jade", funcMap, context)
+		return executeTemplateToHTML(TemplateDir+"/_link_to.jade", TemplateFuncMap, context)
 	}
-	funcMap[`include`] = func(includePath string) (template.HTML, error) {
-		retval, err := executeTemplateToHTML(TemplateDir+"/"+dirName+"/"+controllerName+"/"+includePath+".jade", funcMap, context)
+	TemplateFuncMap[`include`] = func(includePath string) (template.HTML, error) {
+		retval, err := executeTemplateToHTML(TemplateDir+"/"+dirName+"/"+controllerName+"/"+includePath+".jade", TemplateFuncMap, context)
 		if err == nil {
 			return retval, nil
 		}
-		retval, err = executeTemplateToHTML(TemplateDir+"/"+includePath+".jade", funcMap, context)
+		retval, err = executeTemplateToHTML(TemplateDir+"/"+includePath+".jade", TemplateFuncMap, context)
 		if err == nil {
 			return retval, nil
 		}
@@ -175,7 +178,7 @@ func ExecuteTemplate(c *gin.Context, dirName string, controllerName string, layo
 	}
 
 	// 変数適用
-	tmpl, err := template.New("layout").Funcs(funcMap).Parse(layoutHTML)
+	tmpl, err := template.New("layout").Funcs(TemplateFuncMap).Parse(layoutHTML)
 	tmpl.New("tmpl").Parse(contentHTML)
 	if err != nil {
 		log.Println(err)

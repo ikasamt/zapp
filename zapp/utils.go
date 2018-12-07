@@ -1,7 +1,11 @@
 package zapp
 
 import (
+	"fmt"
 	"math/rand"
+	"net/url"
+	"regexp"
+	"strings"
 	"time"
 )
 
@@ -31,4 +35,16 @@ func RandomDigitString(length int) string {
 		cnt++
 	}
 	return string(retval)
+}
+
+
+func Hashtag2Link(text string, href string) string {
+	rep := regexp.MustCompile(`(#[^\s]*)`)
+	matches := rep.FindAllStringSubmatch(text, -1)
+	for _, m := range matches {
+		s := m[0]
+		e := url.QueryEscape(s)
+		text = strings.Replace(text, m[0], fmt.Sprintf("<a href=%s%s>%s</a>", href, e, s), -1)
+	}
+	return text
 }
