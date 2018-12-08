@@ -34,7 +34,6 @@ func ExtractControllerActionName(path string, prefix string) (controllerName str
 		actionName = paths[1]
 	}
 
-	log.Println(controllerName, actionName)
 	return controllerName, actionName
 }
 
