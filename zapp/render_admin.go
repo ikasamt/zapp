@@ -1,7 +1,6 @@
 package zapp
 
 import (
-	"log"
 	"strings"
 	"time"
 
