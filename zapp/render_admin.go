@@ -54,11 +54,8 @@ func Render(c *gin.Context, dir string, context map[string]interface{}, template
 			actionName = tmp[1]
 		}
 	}
-	log.Println(context)
 	context[`controllerName`] = controllerName
-	if context[`actionName`] == `` {
-		context[`actionName`] = actionName
-	}
+	context[`actionName`] = actionName
 
 	context[`CalendarSupport`] = CalendarSupport{Now: time.Now()}
 
