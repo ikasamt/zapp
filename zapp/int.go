@@ -57,3 +57,19 @@ func SplitStringToIntSlice(s string) []int {
 	sort.Ints(IDs)
 	return IDs
 }
+
+
+func IntersectionInt(a, b []int) (ret []int) {
+	m := make(map[int]bool)
+
+	for _, item := range a {
+		m[item] = true
+	}
+
+	for _, item := range b {
+		if _, ok := m[item]; ok {
+			ret = append(ret, item)
+		}
+	}
+	return
+}
