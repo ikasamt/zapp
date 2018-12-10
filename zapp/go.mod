@@ -10,6 +10,7 @@ require (
 	github.com/gin-contrib/sse v0.0.0-20170109093832-22d885f9ecc7 // indirect
 	github.com/gin-gonic/gin v1.3.0
 	github.com/go-sql-driver/mysql v1.4.1
+	github.com/go-test/deep v1.0.1
 	github.com/google/go-cmp v0.2.0 // indirect
 	github.com/gorilla/sessions v1.1.3 // indirect
 	github.com/iancoleman/strcase v0.0.0-20180726023541-3605ed457bf7
@@ -35,5 +36,5 @@ require (
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v8 v8.18.2 // indirect
 	gopkg.in/yaml.v1 v1.0.0-20140924161607-9f9df34309c0
-	gopkg.in/yaml.v2 v2.2.1 // indirect
+	gopkg.in/yaml.v2 v2.2.2 // indirect
 )

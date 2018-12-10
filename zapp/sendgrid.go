@@ -32,25 +32,25 @@ func SendEmail(sendgridAPIKey string, from string, to string, subject string, bo
 	return nil
 }
 
-func SendEmailMultiTo(sendgridAPIKey string, from string, tos []string, subject string, body string) error {
-	// 送信
-	from_ := mail.NewEmail("", from)
-
+func SendEmailMultiTo(sendgridAPIKey string, from string, toStrings []string, subject string, body string) error {
 	// 送信
 	client := sendgrid.NewSendClient(sendgridAPIKey)
 	plainText := mail.NewContent("text/plain", body)
 
 	// message
 	m := new(mail.SGMailV3)
+	from_ := mail.NewEmail("", from)
 	m.SetFrom(from_)
 	m.Subject = subject
-	p := mail.NewPersonalization()
-	for _, toStr := range tos {
-		to := mail.NewEmail("", toStr)
-		p.AddTos(to)
-	}
-	m.AddPersonalizations(p)
 	m.AddContent(plainText)
+
+	p := mail.NewPersonalization()
+	tos := []*mail.Email{}
+	for _, toString := range toStrings {
+		tos = append(tos, mail.NewEmail("", toString))
+	}
+	p.AddTos(tos...)
+	m.AddPersonalizations(p)
 
 	res, err := client.Send(m)
 	if err != nil {
