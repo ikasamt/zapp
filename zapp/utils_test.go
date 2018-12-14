@@ -25,8 +25,8 @@ func Test_RuneCount(t *testing.T) {
 		t.Errorf("got: %v\nwant: %v", actual, expected)
 	}
 
-	actual = zapp.RuneCount(`aa`)
-	expected = 2
+	actual = zapp.RuneCount("aa\r\n")
+	expected = 3
 	if actual != expected {
 		t.Errorf("got: %v\nwant: %v", actual, expected)
 	}

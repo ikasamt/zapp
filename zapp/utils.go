@@ -2,12 +2,13 @@ package zapp
 
 import (
 	"fmt"
-	"golang.org/x/exp/utf8string"
 	"math/rand"
 	"net/url"
 	"regexp"
 	"strings"
 	"time"
+
+	"golang.org/x/exp/utf8string"
 )
 
 func RandomString(length int) string {
@@ -38,7 +39,6 @@ func RandomDigitString(length int) string {
 	return string(retval)
 }
 
-
 func Hashtag2Link(text string, href string) string {
 	rep := regexp.MustCompile(`(#[^\s]*)`)
 	matches := rep.FindAllStringSubmatch(text, -1)
@@ -51,6 +51,7 @@ func Hashtag2Link(text string, href string) string {
 }
 
 func RuneCount(text string) int {
+	text = strings.Replace(text, "\r\n", "\n", -1)
 	t2 := utf8string.NewString(text)
 	return t2.RuneCount()
 }
