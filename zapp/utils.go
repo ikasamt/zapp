@@ -2,6 +2,7 @@ package zapp
 
 import (
 	"fmt"
+	"golang.org/x/exp/utf8string"
 	"math/rand"
 	"net/url"
 	"regexp"
@@ -47,4 +48,9 @@ func Hashtag2Link(text string, href string) string {
 		text = strings.Replace(text, m[0], fmt.Sprintf("<a href=%s%s>%s</a>", href, e, s), -1)
 	}
 	return text
+}
+
+func RuneCount(text string) int {
+	t2 := utf8string.NewString(text)
+	return t2.RuneCount()
 }
