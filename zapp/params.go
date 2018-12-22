@@ -31,3 +31,10 @@ func GetID(c *gin.Context) (int, error) {
 	}
 	return ID, nil
 }
+
+func ParseCheckbox(c *gin.Context, key string) bool {
+	if GetParams(c, key) == `on` {
+		return true
+	}
+	return false
+}
