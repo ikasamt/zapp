@@ -19,7 +19,7 @@ func ParseEmailTemplateFile(fileName string, data map[string]interface{}) (subje
 	fn := filepath.Join(EmailTemplateDir, fileName)
 	log.Println("reading: ", fn)
 	t := template.Must(template.ParseFiles(fn))
-	if err := t.ExecuteTemplate(&buf, fn, data); err != nil {
+	if err := t.ExecuteTemplate(&buf, `email`, data); err != nil {
 		log.Fatal(err)
 	}
 
