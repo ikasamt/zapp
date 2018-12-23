@@ -59,7 +59,7 @@ func SplitStringToIntSlice(s string) []int {
 }
 
 
-func IntersectionInt(a, b []int) (ret []int) {
+func IntIntersection(a, b []int) (ret []int) {
 	m := make(map[int]bool)
 
 	for _, item := range a {
@@ -69,6 +69,16 @@ func IntersectionInt(a, b []int) (ret []int) {
 	for _, item := range b {
 		if _, ok := m[item]; ok {
 			ret = append(ret, item)
+		}
+	}
+	return
+}
+
+
+func IntDiff(a, b []int) (ret []int) {
+	for _, i := range a {
+		if !ContainsInt(b, i){
+			ret = append(ret, i)
 		}
 	}
 	return
