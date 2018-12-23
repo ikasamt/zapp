@@ -13,12 +13,12 @@ var (
 	EmailTemplateLineSepChar = "\n"
 )
 
-func ParseEmailTemplateFile(fileName string, d map[string]interface{}) (subject, body string) {
+func ParseEmailTemplateFile(fileName string, data map[string]interface{}) (subject, body string) {
 	// テンプレートから文字列を生成する
 	var buf bytes.Buffer
 	fn := filepath.Join(EmailTemplateDir, fileName)
 	t := template.Must(template.ParseFiles(fn))
-	if err := t.ExecuteTemplate(&buf, fileName, d); err != nil {
+	if err := t.ExecuteTemplate(&buf, fileName, data); err != nil {
 		log.Fatal(err)
 	}
 
