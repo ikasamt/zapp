@@ -17,8 +17,9 @@ func ParseEmailTemplateFile(fileName string, data map[string]interface{}) (subje
 	// テンプレートから文字列を生成する
 	var buf bytes.Buffer
 	fn := filepath.Join(EmailTemplateDir, fileName)
+	log.Println("reading: ", fn)
 	t := template.Must(template.ParseFiles(fn))
-	if err := t.ExecuteTemplate(&buf, fileName, data); err != nil {
+	if err := t.ExecuteTemplate(&buf, fn, data); err != nil {
 		log.Fatal(err)
 	}
 
