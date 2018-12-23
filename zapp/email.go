@@ -2,10 +2,10 @@ package zapp
 
 import (
 	"bytes"
-	"log"
+	"html/template"
+	"io/ioutil"
 	"path/filepath"
 	"strings"
-	"html/template"
 )
 
 var (
@@ -13,14 +13,22 @@ var (
 	EmailTemplateLineSepChar = "\n"
 )
 
-func ParseEmailTemplateFile(fileName string, data map[string]interface{}) (subject, body string) {
+func ParseEmailTemplateFile(fileName string, data map[string]interface{}) (subject, body string, err error) {
 	// テンプレートから文字列を生成する
 	var buf bytes.Buffer
-	fn := filepath.Join(EmailTemplateDir, fileName)
-	log.Println("reading: ", fn)
-	t := template.Must(template.ParseFiles(fn))
-	if err := t.ExecuteTemplate(&buf, `email`, data); err != nil {
-		log.Fatal(err)
+	templateFilename := filepath.Join(EmailTemplateDir, fileName)
+	bytes, err := ioutil.ReadFile(templateFilename)
+	if err != nil {
+		return
+	}
+
+	// 変数適用
+	tmpl, err := template.New("tmpl").Parse(string(bytes))
+	if err != nil {
+		return
+	}
+	if err = tmpl.Execute(&buf, data); err != nil {
+		return
 	}
 
 	// １行目を題名、２行目以降を本文とする
