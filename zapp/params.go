@@ -31,3 +31,12 @@ func GetID(c *gin.Context) (int, error) {
 	}
 	return ID, nil
 }
+
+func GetInt(c *gin.Context, key string) (int, error) {
+	iStr := GetParams(c, key)
+	i, _ := strconv.Atoi(iStr)
+	if i == 0 {
+		return 0, errors.New("Error: NOT FOUND ", key)
+	}
+	return i, nil
+}
