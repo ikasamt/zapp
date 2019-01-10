@@ -43,7 +43,7 @@ func GetInt(c *gin.Context, key string) (int, error) {
 	iStr := GetParams(c, key)
 	i, _ := strconv.Atoi(iStr)
 	if i == 0 {
-		return 0, errors.New("Error: NOT FOUND ", key)
+		return 0, errors.New("Error: NOT FOUND %s", key)
 	}
 	return i, nil
 }
