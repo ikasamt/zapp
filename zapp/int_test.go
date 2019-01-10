@@ -40,3 +40,32 @@ func Test_SplitStringToIntSlice(t *testing.T) {
 		t.Errorf("got: %v\nwant: %v", actual, expected)
 	}
 }
+
+
+func Test_IntIntersection(t *testing.T) {
+	a := []int{1,2,3}
+	b := []int{2,3,4}
+	actual := zapp.IntIntersection(a, b)
+	expected := []int{2,3}
+	if diff := deep.Equal(actual, expected); diff != nil {
+		t.Errorf("got: %v\nwant: %v", actual, expected)
+	}
+}
+
+
+func Test_IntDiff(t *testing.T) {
+	a := []int{1,2,3}
+	b := []int{2,3,4}
+	actual := zapp.IntDiff(a, b)
+	expected := []int{1}
+	if diff := deep.Equal(actual, expected); diff != nil {
+		t.Errorf("got: %v\nwant: %v", actual, expected)
+	}
+
+
+	actual2 := zapp.IntDiff(b, a)
+	expected2 := []int{4}
+	if diff := deep.Equal(actual2, expected2); diff != nil {
+		t.Errorf("got: %v\nwant: %v", actual2, expected2)
+	}
+}
