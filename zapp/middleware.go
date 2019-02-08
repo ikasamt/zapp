@@ -21,15 +21,11 @@ func ErrorMiddleware(layoutName string) gin.HandlerFunc {
 	}
 }
 
-func LoggingMiddleware(isDev bool) gin.HandlerFunc {
+func IsDevMiddleware(isDev bool) gin.HandlerFunc {
 	return func(c *gin.Context) {
-		startedAt := time.Now()
 		if isDev {
 			c.Set(`__is_dev`, true)
 		}
 		c.Next()
-		finishedAt := time.Now()
-		delta := finishedAt.Sub(startedAt)
-		log.Println(fmt.Sprintf(`[delta:%s]`, delta))
 	}
 }
