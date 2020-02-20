@@ -82,8 +82,15 @@ func baseFuncMap() template.FuncMap {
 	}
 }
 
+var TemplateCaches = map[string]string{}
+
 // ConvertJadeToHTML は、jadeファイルを読みHTML文字列にする
 func ConvertJadeToHTML(templateFilename string) (html string, err error) {
+	if html, ok := TemplateCaches[templateFilename]; ok{
+		TemplateCaches[templateFilename] = html
+		return  html, nil
+	}
+
 	jadeBytes, err := ioutil.ReadFile(templateFilename)
 	if err != nil {
 		return "", err
